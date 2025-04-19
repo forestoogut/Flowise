@@ -1,5 +1,5 @@
 # Build local monorepo image
-# docker build --no-cache -t  flowise .
+# docker build --no-cache -t flowise .
 
 # Run image
 # docker run -d -p 3000:3000 flowise
@@ -16,7 +16,7 @@ RUN apk add --no-cache chromium
 # Fixes: https://github.com/FlowiseAI/Flowise/issues/4126
 RUN apk add --no-cache curl
 
-#install PNPM globaly
+# Install PNPM globally
 RUN npm install -g pnpm
 
 ENV PUPPETEER_SKIP_DOWNLOAD=true
@@ -30,9 +30,9 @@ WORKDIR /usr/src
 COPY . .
 
 RUN pnpm install
-
 RUN pnpm build
 
 EXPOSE 3000
 
-CMD [ "pnpm", "start" ]
+# Ensures persistent storage directories exist on each container start
+CMD ["sh", "-c", "mkdir -p /opt/render/.flowise/logs /opt/render/.flowise/storage && pnpm start"]
